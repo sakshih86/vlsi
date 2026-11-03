@@ -1,0 +1,64 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity alu4 is
+    Port (
+        A       : in  STD_LOGIC_VECTOR(3 downto 0);
+        B       : in  STD_LOGIC_VECTOR(3 downto 0);
+        SEL     : in  STD_LOGIC_VECTOR(2 downto 0);
+        RESULT  : out STD_LOGIC_VECTOR(3 downto 0);
+        CARRY   : out STD_LOGIC
+    );
+end alu4;
+
+architecture Behavioral of alu4 is
+    signal temp : unsigned(4 downto 0);
+begin
+
+    process(A, B, SEL)
+    begin
+        temp <= (others => '0');
+        CARRY <= '0';
+
+        case SEL is
+
+            when "000" =>
+                temp <= ('0' & unsigned(A)) +
+                        ('0' & unsigned(B));
+
+            when "001" =>
+                temp <= ('0' & unsigned(A)) -
+                        ('0' & unsigned(B));
+
+            when "010" =>
+                RESULT <= A AND B;
+
+            when "011" =>
+                RESULT <= A OR B;
+
+            when "100" =>
+                RESULT <= A XOR B;
+
+            when "101" =>
+                RESULT <= NOT A;
+
+            when "110" =>
+                RESULT <= A NAND B;
+
+            when "111" =>
+                RESULT <= A NOR B;
+
+            when others =>
+                RESULT <= (others => '0');
+
+        end case;
+
+        if SEL = "000" or SEL = "001" then
+            RESULT <= std_logic_vector(temp(3 downto 0));
+            CARRY <= temp(4);
+        end if;
+
+    end process;
+
+end Behavioral;
