@@ -1,0 +1,35 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity mod_n_counter is
+    Port (
+        CLK   : in  STD_LOGIC;
+        RESET : in  STD_LOGIC;
+        COUNT : out STD_LOGIC_VECTOR(3 downto 0)
+    );
+end mod_n_counter;
+
+architecture Behavioral of mod_n_counter is
+
+    signal temp : unsigned(3 downto 0) := (others => '0');
+
+begin
+
+    process(CLK, RESET)
+    begin
+        if RESET = '1' then
+            temp <= (others => '0');
+
+        elsif rising_edge(CLK) then
+            if temp = 9 then
+                temp <= (others => '0');
+            else
+                temp <= temp + 1;
+            end if;
+        end if;
+    end process;
+
+    COUNT <= std_logic_vector(temp);
+
+end Behavioral;
